@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 class MenuListViewModel {
     var menus: [Menu] = [
@@ -17,5 +18,7 @@ class MenuListViewModel {
     ]
     
     var itemsCount = 5
-    var totalPrice = 10_000
+    // just
+    // 1만원이라는 값을 subscribe해서 받을 수 있도록 하나의 요소만을 방출하는 observable을 생성
+    var totalPrice: Observable<Int> = Observable.just(10_000)
 }

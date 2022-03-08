@@ -14,11 +14,19 @@ class MenuViewController: UIViewController {
     // MARK: - Life Cycle
     
     let viewModel = MenuListViewModel()
+    var disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         updateUI()
+        
+        viewModel.totalPrice
+            .map { $0.currencyKR() }
+            .subscribe (onNext: {
+                self.totalPrice.text = $0
+            })
+            .disposed(by: disposeBag)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -50,14 +58,14 @@ class MenuViewController: UIViewController {
         // showAlert("Order Fail", "No Orders")
         //performSegue(withIdentifier: "OrderViewController", sender: nil)
         
-        viewModel.totalPrice += 100
+        //viewModel.totalPrice += 100
         
         updateUI()
     }
     
     func updateUI() {
         itemCountLabel.text = "\(viewModel.itemsCount)"
-        totalPrice.text = viewModel.totalPrice.currencyKR()
+        //totalPrice.text = viewModel.totalPrice.currencyKR()
     }
 }
 
