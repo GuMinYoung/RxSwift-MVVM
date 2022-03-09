@@ -70,6 +70,10 @@ class MenuViewController: UIViewController {
         // showAlert("Order Fail", "No Orders")
         //performSegue(withIdentifier: "OrderViewController", sender: nil)
         
-        //viewModel.totalPrice += 100
+        viewModel.menuObservable.onNext([
+            Menu(name: "menu", price: Int.random(in: 100...1000), count: Int.random(in: 0...3)),
+            Menu(name: "menu", price: Int.random(in: 100...1000), count: Int.random(in: 0...3)),
+            Menu(name: "menu", price: Int.random(in: 100...1000), count: Int.random(in: 0...3))
+        ])
     }
 }
