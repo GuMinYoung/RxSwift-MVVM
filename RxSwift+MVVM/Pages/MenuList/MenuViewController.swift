@@ -21,27 +21,28 @@ class MenuViewController: UIViewController {
         super.viewDidLoad()
         
         viewModel.menuObservable
-            .observeOn(MainScheduler.instance)
-            .bind(to: tableView.rx.items(cellIdentifier: cellID, cellType: MenuItemTableViewCell.self)) { index, item, cell in
-            cell.title.text = item.name
-            cell.price.text = "\(item.price)"
-            cell.count.text = "\(item.count)"
+            .asDriver(onErrorJustReturn: [Menu]())
+            .drive(tableView.rx.items(cellIdentifier: cellID, cellType: MenuItemTableViewCell.self)) { index, item, cell in
+                cell.title.text = item.name
+                cell.price.text = "\(item.price)"
+                cell.count.text = "\(item.count)"
                 cell.onChange = { [weak self] increase in
                     guard let self = self else {return}
                     self.viewModel.changeCount(item: item, increase: increase)
                 }
-        }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         viewModel.itemsCount
-            .observeOn(MainScheduler.instance)
             .map { "\($0)" }
-            .bind(to: itemCountLabel.rx.text)
+            .asDriver(onErrorJustReturn: "")
+            .drive(itemCountLabel.rx.text)
             .disposed(by: disposeBag)
         
         viewModel.totalPrice
-            .observeOn(MainScheduler.instance)
             .map { $0.currencyKR() }
-            .bind(to: totalPrice.rx.text)
+            .asDriver(onErrorJustReturn: "")
+            .drive(totalPrice.rx.text)
             .disposed(by: disposeBag)
     }
 
