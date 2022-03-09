@@ -76,9 +76,9 @@ class MenuViewController: UIViewController {
         //performSegue(withIdentifier: "OrderViewController", sender: nil)
         
         viewModel.menuObservable.onNext([
-            Menu(name: "menu", price: Int.random(in: 100...1000), count: Int.random(in: 0...3)),
-            Menu(name: "menu", price: Int.random(in: 100...1000), count: Int.random(in: 0...3)),
-            Menu(name: "menu", price: Int.random(in: 100...1000), count: Int.random(in: 0...3))
+            Menu(id: 0, name: "menu", price: Int.random(in: 100...1000), count: Int.random(in: 0...3)),
+            Menu(id: 1, name: "menu", price: Int.random(in: 100...1000), count: Int.random(in: 0...3)),
+            Menu(id: 2, name: "menu", price: Int.random(in: 100...1000), count: Int.random(in: 0...3))
         ])
     }
 }

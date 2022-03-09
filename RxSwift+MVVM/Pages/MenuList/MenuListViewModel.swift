@@ -24,10 +24,10 @@ class MenuListViewModel {
     
     init() {
         let menus: [Menu] = [
-            Menu(name: "튀김1", price: 200, count: 0),
-            Menu(name: "튀김1", price: 200, count: 0),
-            Menu(name: "튀김1", price: 200, count: 0),
-            Menu(name: "튀김1", price: 200, count: 0)
+            Menu(id: 0, name: "튀김1", price: 200, count: 0),
+            Menu(id: 1, name: "튀김1", price: 200, count: 0),
+            Menu(id: 2, name: "튀김1", price: 200, count: 0),
+            Menu(id: 3, name: "튀김1", price: 200, count: 0)
         ]
         
         menuObservable.onNext(menus)
@@ -35,7 +35,7 @@ class MenuListViewModel {
     
     func clearAllItemSelections() {
         _ = menuObservable.map { menus in
-            menus.map { Menu(name: $0.name, price: $0.price, count: 0)
+            menus.map { Menu(id: $0.id, name: $0.name, price: $0.price, count: 0)
             }
         }.take(1)   // 1개 아이템만 방출
         .subscribe(onNext: {
@@ -48,10 +48,10 @@ class MenuListViewModel {
         _ = menuObservable
             .map { menus in
             menus.map {
-                if item.name == $0.name {
-                    return Menu(name: $0.name, price: $0.price, count: $0.count + increase)
+                if item.id == $0.id {
+                    return Menu(id: $0.id, name: $0.name, price: $0.price, count: $0.count + increase)
                 } else {
-                    return Menu(name: $0.name, price: $0.price, count: $0.count)
+                    return Menu(id: $0.id, name: $0.name, price: $0.price, count: $0.count)
                 }
             }
         }.take(1)   // 1개 아이템만 방출
