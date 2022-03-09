@@ -15,12 +15,25 @@ class MenuViewController: UIViewController {
     
     let viewModel = MenuListViewModel()
     var disposeBag = DisposeBag()
+    let cellID = "MenuItemTableViewCell"
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        viewModel.menuObservable.bind(to: tableView.rx.items(cellIdentifier: cellID, cellType: MenuItemTableViewCell.self)) { index, item, cell in
+            cell.title.text = item.name
+            cell.price.text = "\(item.price)"
+            cell.count.text = "\(item.count)"
+        }.disposed(by: disposeBag)
+        
+        viewModel.itemsCount
+            .map { "\($0)" }
+            .subscribe (onNext: {
+                self.itemCountLabel.text = $0
+            })
+            .disposed(by: disposeBag)
+        
         viewModel.totalPrice
-            .scan(0, accumulator: +)    // 시작값 0, 기존 값 + 새 값
             .map { $0.currencyKR() }
             .subscribe (onNext: {
                 self.totalPrice.text = $0
@@ -58,23 +71,5 @@ class MenuViewController: UIViewController {
         //performSegue(withIdentifier: "OrderViewController", sender: nil)
         
         //viewModel.totalPrice += 100
-        viewModel.totalPrice.onNext(100)
-    }
-}
-
-extension MenuViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.menus.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MenuItemTableViewCell") as! MenuItemTableViewCell
-
-        let menu = viewModel.menus[indexPath.row]
-        cell.title.text = menu.name
-        cell.price.text = "\(menu.price)"
-        cell.count.text = "\(menu.count)"
-
-        return cell
     }
 }
