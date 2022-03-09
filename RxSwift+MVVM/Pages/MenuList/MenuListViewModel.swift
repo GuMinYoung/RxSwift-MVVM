@@ -43,4 +43,21 @@ class MenuListViewModel {
             self.menuObservable.onNext($0)
         })
     }
+    
+    func changeCount(item: Menu, increase: Int) {
+        _ = menuObservable
+            .map { menus in
+            menus.map {
+                if item.name == $0.name {
+                    return Menu(name: $0.name, price: $0.price, count: $0.count + increase)
+                } else {
+                    return Menu(name: $0.name, price: $0.price, count: $0.count)
+                }
+            }
+        }.take(1)   // 1개 아이템만 방출
+        .subscribe(onNext: {
+            // 바뀐 메뉴를 다시 menuObservable에 넣어줌
+            self.menuObservable.onNext($0)
+        })
+    }
 }

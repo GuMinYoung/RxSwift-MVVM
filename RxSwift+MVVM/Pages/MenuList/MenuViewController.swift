@@ -26,6 +26,10 @@ class MenuViewController: UIViewController {
             cell.title.text = item.name
             cell.price.text = "\(item.price)"
             cell.count.text = "\(item.count)"
+                cell.onChange = { [weak self] increase in
+                    guard let self = self else {return}
+                    self.viewModel.changeCount(item: item, increase: increase)
+                }
         }.disposed(by: disposeBag)
         
         viewModel.itemsCount
