@@ -19,9 +19,8 @@ class MenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        updateUI()
-        
         viewModel.totalPrice
+            .scan(0, accumulator: +)    // 시작값 0, 기존 값 + 새 값
             .map { $0.currencyKR() }
             .subscribe (onNext: {
                 self.totalPrice.text = $0
@@ -59,13 +58,7 @@ class MenuViewController: UIViewController {
         //performSegue(withIdentifier: "OrderViewController", sender: nil)
         
         //viewModel.totalPrice += 100
-        
-        updateUI()
-    }
-    
-    func updateUI() {
-        itemCountLabel.text = "\(viewModel.itemsCount)"
-        //totalPrice.text = viewModel.totalPrice.currencyKR()
+        viewModel.totalPrice.onNext(100)
     }
 }
 
