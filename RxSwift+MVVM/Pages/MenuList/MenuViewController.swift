@@ -20,24 +20,24 @@ class MenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel.menuObservable.bind(to: tableView.rx.items(cellIdentifier: cellID, cellType: MenuItemTableViewCell.self)) { index, item, cell in
+        viewModel.menuObservable
+            .observeOn(MainScheduler.instance)
+            .bind(to: tableView.rx.items(cellIdentifier: cellID, cellType: MenuItemTableViewCell.self)) { index, item, cell in
             cell.title.text = item.name
             cell.price.text = "\(item.price)"
             cell.count.text = "\(item.count)"
         }.disposed(by: disposeBag)
         
         viewModel.itemsCount
+            .observeOn(MainScheduler.instance)
             .map { "\($0)" }
-            .subscribe (onNext: {
-                self.itemCountLabel.text = $0
-            })
+            .bind(to: itemCountLabel.rx.text)
             .disposed(by: disposeBag)
         
         viewModel.totalPrice
+            .observeOn(MainScheduler.instance)
             .map { $0.currencyKR() }
-            .subscribe (onNext: {
-                self.totalPrice.text = $0
-            })
+            .bind(to: totalPrice.rx.text)
             .disposed(by: disposeBag)
     }
 
